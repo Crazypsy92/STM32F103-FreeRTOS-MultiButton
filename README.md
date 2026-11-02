@@ -84,6 +84,21 @@ FLASH: ~12 KB / 64 KB
 
 Use ST-Link with `STM32_Programmer_CLI`, OpenOCD, or the STM32CubeIDE debug launch configuration in `.vscode/launch.json`.
 
+## Verification
+
+| Check | Result |
+| --- | --- |
+| Debug build (CMake + Ninja + arm-none-eabi-gcc) | Pass |
+| Host-simulation of the button state machine (mock GPIO, 5 ms tick loop) | Pass — KEY1 turns LED on, KEY2 turns LED off, simultaneous clicks resolve to OFF, long press ignored |
+| Hardware (STM32F103C8T6, PC13 LED / PB12 KEY1 / PB14 KEY2) | Pass — scheduler runs, 5 ms scan period stable, LED responds to both buttons as expected |
+
+Measured footprint (Debug build):
+
+```
+RAM:   10256 B / 20 KB   (50.08%)
+FLASH: 12148 B / 64 KB   (18.54%)
+```
+
 ## Configuration Notes
 
 - `configTICK_RATE_HZ = 1000`, scan period = 5 ms, matching `TICKS_INTERVAL` in `multi_button.h`.
